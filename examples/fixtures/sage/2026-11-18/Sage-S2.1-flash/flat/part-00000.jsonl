@@ -1,0 +1,5 @@
+{"request_id":"example-u71-first","src_time":"00-00","model":"Sage-S2.1-flash","input_length":128,"output_length":64,"hash_ids":[10,11],"stream":false,"api_time":0.05}
+{"request_id":"example-u71-next","src_time":"00-00","model":"Sage-S2.1-flash","input_length":192,"output_length":64,"hash_ids":[10,11,12],"stream":false,"api_time":0.05}
+{"request_id":"example-u71-new-rule-group","src_time":"00-00","model":"Sage-S2.1-flash","input_length":256,"output_length":16,"hash_ids":[10,11,12,13],"stream":false,"api_time":0.05}
+{"request_id":"example-u440-first","src_time":"00-00","model":"Sage-S2.1-flash","input_length":128,"output_length":32,"hash_ids":[10,11],"stream":false,"api_time":0.05}
+{"request_id":"example-u440-next","src_time":"00-00","model":"Sage-S2.1-flash","input_length":192,"output_length":16,"hash_ids":[10,11,14],"stream":false,"api_time":0.05}

@@ -1,0 +1,21 @@
+# Private/full datasets and generated analyses
+/data/
+/results/
+/artifacts/
+*.csv
+*.jsonl
+!examples/fixtures/**/*.jsonl
+
+# Local archives and runtime files
+*.tar
+*.tar.gz
+*.tar.zst
+*.zip
+*.zst
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+!.env.example
+.DS_Store
