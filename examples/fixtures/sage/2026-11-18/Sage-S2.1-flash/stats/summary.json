@@ -1,0 +1,14 @@
+{
+  "day": "2026-11-18",
+  "model": "Sage-S2.1-flash",
+  "block_size": 64,
+  "records": 5,
+  "sessions": 3,
+  "hash_blocks_total": 14,
+  "files": {
+    "trace": 3,
+    "schedule": 1,
+    "flat": 1
+  },
+  "note": "Hand-written synthetic fixture, not production data. Rule labels intentionally split uid 71."
+}

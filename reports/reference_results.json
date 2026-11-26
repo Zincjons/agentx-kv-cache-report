@@ -1,0 +1,268 @@
+{
+  "metric": "InferenceX Cached input",
+  "reference_date": "2026-11-26",
+  "agentx": {
+    "conversations": 393,
+    "request_count": 98827,
+    "input_tokens": 21635381376,
+    "cached_input_tokens": 21206048768,
+    "cached_input_rate": 0.9801559953791128
+  },
+  "sage_rule_groups_all_trace": {
+    "requests": 211603,
+    "input_tokens": 1808432345,
+    "cached_input_tokens": 1104794899,
+    "cached_input_rate": 0.6109130386074797
+  },
+  "sage_reliable_common": {
+    "requests": 211538,
+    "input_tokens": 1808432150,
+    "output_tokens": 214905329,
+    "user_daily_cached_tokens": 1338771443,
+    "global_daily_cached_tokens": 1338771452,
+    "user_continuous_cached_tokens": 1340479688,
+    "global_continuous_cached_tokens": 1340479691,
+    "user_daily_rate": 0.7402939850411308,
+    "global_daily_rate": 0.7402939900178174,
+    "user_continuous_rate": 0.741238585036215,
+    "global_continuous_rate": 0.7412385866951104
+  },
+  "sage_reliable_common_daily": [
+    {
+      "day": "2026-11-16",
+      "requests": 3845,
+      "input_tokens": 15385390,
+      "output_tokens": 2898425,
+      "user_daily_cached_tokens": 7674899,
+      "global_daily_cached_tokens": 7674902,
+      "user_continuous_cached_tokens": 7674899,
+      "global_continuous_cached_tokens": 7674902,
+      "user_daily_rate": 0.4988433182389267,
+      "global_daily_rate": 0.4988435132291089,
+      "user_continuous_rate": 0.4988433182389267,
+      "global_continuous_rate": 0.4988435132291089
+    },
+    {
+      "day": "2026-11-17",
+      "requests": 36972,
+      "input_tokens": 330197740,
+      "output_tokens": 45719587,
+      "user_daily_cached_tokens": 235772163,
+      "global_daily_cached_tokens": 235772166,
+      "user_continuous_cached_tokens": 235943164,
+      "global_continuous_cached_tokens": 235943164,
+      "user_daily_rate": 0.71403324262607,
+      "global_daily_rate": 0.7140332517115351,
+      "user_continuous_rate": 0.7145511171578582,
+      "global_continuous_rate": 0.7145511171578582
+    },
+    {
+      "day": "2026-11-18",
+      "requests": 170721,
+      "input_tokens": 1462849020,
+      "output_tokens": 166287317,
+      "user_daily_cached_tokens": 1095324381,
+      "global_daily_cached_tokens": 1095324384,
+      "user_continuous_cached_tokens": 1096861625,
+      "global_continuous_cached_tokens": 1096861625,
+      "user_daily_rate": 0.7487610587454883,
+      "global_daily_rate": 0.7487610607962809,
+      "user_continuous_rate": 0.7498119149712388,
+      "global_continuous_rate": 0.7498119149712388
+    }
+  ],
+  "cache_aware_schedule_2026_11_18": {
+    "requests": 170739,
+    "capacity_blocks_per_replica": 500000,
+    "replicas": 4,
+    "probe_blocks": 256,
+    "results": [
+      {
+        "label": "shared-unlimited",
+        "requests": 170739,
+        "input_tokens": 1462849074,
+        "cached_input_tokens": 1095324438,
+        "uncached_input_tokens": 367524636,
+        "cached_input_rate": 0.748761070070582,
+        "capacity_blocks_per_replica": null,
+        "replicas": 1,
+        "routing": "rr",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          170739
+        ],
+        "replica_input_tokens": [
+          1462849074
+        ],
+        "resident_blocks_per_replica": [
+          5832488
+        ]
+      },
+      {
+        "label": "shared-lru",
+        "requests": 170739,
+        "input_tokens": 1462849074,
+        "cached_input_tokens": 1092695735,
+        "uncached_input_tokens": 370153339,
+        "cached_input_rate": 0.7469640952173854,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 1,
+        "routing": "rr",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          170739
+        ],
+        "replica_input_tokens": [
+          1462849074
+        ],
+        "resident_blocks_per_replica": [
+          500000
+        ]
+      },
+      {
+        "label": "replicas-round-robin",
+        "requests": 170739,
+        "input_tokens": 1462849074,
+        "cached_input_tokens": 991759102,
+        "uncached_input_tokens": 471089972,
+        "cached_input_rate": 0.6779640631607632,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "rr",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          42685,
+          42685,
+          42685,
+          42684
+        ],
+        "replica_input_tokens": [
+          367354490,
+          364831421,
+          362133935,
+          368529228
+        ],
+        "resident_blocks_per_replica": [
+          500000,
+          500000,
+          500000,
+          500000
+        ]
+      },
+      {
+        "label": "replicas-random",
+        "requests": 170739,
+        "input_tokens": 1462849074,
+        "cached_input_tokens": 992935651,
+        "uncached_input_tokens": 469913423,
+        "cached_input_rate": 0.6787683491400289,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "random",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          42679,
+          42691,
+          42794,
+          42575
+        ],
+        "replica_input_tokens": [
+          367086904,
+          365695175,
+          360823386,
+          369243609
+        ],
+        "resident_blocks_per_replica": [
+          500000,
+          500000,
+          500000,
+          500000
+        ]
+      },
+      {
+        "label": "replicas-cache-aware",
+        "requests": 170739,
+        "input_tokens": 1462849074,
+        "cached_input_tokens": 1094977572,
+        "uncached_input_tokens": 367871502,
+        "cached_input_rate": 0.7485239533330011,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "prefix",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          33044,
+          72346,
+          30222,
+          35127
+        ],
+        "replica_input_tokens": [
+          229343259,
+          118079543,
+          379369232,
+          736057040
+        ],
+        "resident_blocks_per_replica": [
+          500000,
+          500000,
+          500000,
+          500000
+        ]
+      }
+    ]
+  },
+  "notes": [
+    "Production input records and per-request outputs are not included.",
+    "Different cache/history scopes do not represent ground-truth task labels.",
+    "Multi-replica capacities are per replica, not fixed total capacity."
+  ],
+  "request_association_pilot": {
+    "primary_config": {
+      "name": "primary_1024tokens_120s",
+      "min_prefix_tokens": 1024,
+      "window_seconds": 120,
+      "require_tool_use": false,
+      "min_growth_tokens": 64
+    },
+    "primary_score": {
+      "requests": 211538,
+      "input_tokens": 1808432150,
+      "daily_cached_tokens": 535637925,
+      "continuous_cached_tokens": 535637925,
+      "daily_rate": 0.2961891188452937,
+      "continuous_rate": 0.2961891188452937,
+      "unknown_policy": "Each unassigned singleton is scored with its own empty history; it is not declared a real one-request task."
+    },
+    "primary_graph": {
+      "requests": 211538,
+      "input_tokens": 1808432150,
+      "linked_edges": 24461,
+      "candidate_groups_with_at_least_2_requests": 6594,
+      "requests_in_candidate_groups": 31055,
+      "request_coverage_percent": 14.68057748489633,
+      "input_tokens_in_candidate_groups": 723736172,
+      "input_token_coverage_percent": 40.02008988835993,
+      "unassigned_singleton_requests": 180483,
+      "linked_tool_use_edges": 7283,
+      "linked_edges_growth_compatible_with_output": 21230,
+      "linked_edges_with_unique_parent_identity": 24428,
+      "cross_date_edges": 0,
+      "branch_points": 420,
+      "maximum_direct_children": 23,
+      "largest_candidate_group_requests": 498,
+      "decisions": {
+        "unknown_short_input": 91765,
+        "unknown_no_eligible_predecessor": 93958,
+        "linked_prefix_time": 17178,
+        "linked_tool_use": 7283,
+        "unknown_multiple_prior_groups": 1354
+      }
+    },
+    "time_shuffle_request_coverage_percent": [
+      0.906692887329936,
+      0.9142565401960877,
+      0.9085838005464739
+    ],
+    "not_ground_truth_tasks": true
+  }
+}
