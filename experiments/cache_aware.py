@@ -13,6 +13,7 @@ import json
 import random
 import time
 from collections import OrderedDict
+from itertools import chain
 from pathlib import Path
 
 from analyze_agentx import count_prefix_hits
@@ -80,14 +81,23 @@ def replay(stream, *, capacity_blocks=None, replicas=1, routing='rr', probe_bloc
     }
 
 
-def run_day(day_dir, output_dir, *, capacity_blocks=1_000_000, replicas=2, probe_blocks=256):
-    day_dir = Path(day_dir).resolve()
+def run_days(data_root, days, output_dir, *, capacity_blocks=1_000_000, replicas=2, probe_blocks=256):
+    data_root = Path(data_root).resolve()
+    if not days or len(set(days)) != len(days):
+        raise ValueError('Select at least one date, without repetitions')
+    days = sorted(days)
     output_dir = Path(output_dir).resolve()
     if output_dir.exists():
         raise FileExistsError(output_dir)
     reference = load_reference(PROJECT / 'analyze_agentx.py')
-    stream, sources = load_day(day_dir.parent.parent, day_dir.parent.name, reference)
+    streams, sources = [], []
+    for day in days:
+        stream, metadata = load_day(data_root, day, reference)
+        streams.append(stream)
+        sources.append({'day': day, **metadata})
     results = []
+    daily = [{'day': day, 'results': []} for day in days]
+    weighted = []
     for label, kw in [
         ('shared-unlimited', {}),
         ('shared-lru', {'capacity_blocks': capacity_blocks}),
@@ -95,13 +105,29 @@ def run_day(day_dir, output_dir, *, capacity_blocks=1_000_000, replicas=2, probe
         ('replicas-random', {'capacity_blocks': capacity_blocks, 'replicas': replicas, 'routing': 'random'}),
         ('replicas-cache-aware', {'capacity_blocks': capacity_blocks, 'replicas': replicas, 'routing': 'prefix'}),
     ]:
-        result = {'label': label, **replay(stream, probe_blocks=probe_blocks, **kw)}
+        # One replay retains caches, routing counts and rotation across midnight.
+        result = {'label': label, **replay(chain.from_iterable(streams), probe_blocks=probe_blocks, **kw)}
         results.append(result)
-        print(f"{label}: {result['cached_input_rate']:.6%}; replica_requests={result['replica_requests']}", flush=True)
+        for stream, day_report in zip(streams, daily):
+            cold = (dict(result) if len(days) == 1 else
+                    {'label': label, **replay(stream, probe_blocks=probe_blocks, **kw)})
+            day_report['results'].append(cold)
+        total = {'label': label, 'capacity_blocks_per_replica': result['capacity_blocks_per_replica'],
+                 'replicas': result['replicas'], 'routing': result['routing'],
+                 'routing_probe_blocks': probe_blocks}
+        for key in ('requests', 'input_tokens', 'cached_input_tokens', 'uncached_input_tokens'):
+            total[key] = sum(d['results'][-1][key] for d in daily)
+        total['cached_input_rate'] = (total['cached_input_tokens'] / total['input_tokens']
+                                     if total['input_tokens'] else 0.0)
+        weighted.append(total)
+        print(f"{label}: continuous={result['cached_input_rate']:.6%}; daily-cold-weighted={total['cached_input_rate']:.6%}; replica_requests={result['replica_requests']}", flush=True)
     report = {
-        'input': str(day_dir / 'schedule'), 'input_metadata': sources,
+        'input': [str(data_root / day / 'Sage-S2.1-flash' / 'schedule') for day in days],
+        'days': days, 'input_metadata': sources,
         'metric': 'AgentX/InferenceX Cached input formula',
         'cache_namespace': '(model, hash_id); no session or user labels loaded',
+        'history_mode': 'continuous across selected dates',
+        'ordering': 'date, timestamp; equal timestamps retain source filename/line order',
         'block_size': 64,
         'assumptions': [
             'Rows replayed in timestamp order; each request immediately admits all input blocks.',
@@ -112,15 +138,26 @@ def run_day(day_dir, output_dir, *, capacity_blocks=1_000_000, replicas=2, probe
         ],
         'reference_script_sha256': hashlib.sha256((PROJECT / 'analyze_agentx.py').read_bytes()).hexdigest(),
         'results': results,
+        'daily_results': daily,
+        'daily_cold_starts_weighted_results': weighted,
     }
     output_dir.mkdir(parents=True)
     (output_dir / 'summary.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
     return report
 
 
+def run_day(day_dir, output_dir, **kwargs):
+    """Compatibility entry point for an explicitly selected single date."""
+    day_dir = Path(day_dir).resolve()
+    return run_days(day_dir.parent.parent, [day_dir.parent.name], output_dir, **kwargs)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--day-dir', type=Path, required=True)
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument('--day-dir', type=Path, help='explicit single date instead of the full dataset')
+    source.add_argument('--data-root', type=Path, default=PROJECT / 'data' / 'sage')
+    parser.add_argument('--days', nargs='+', help='default: 2026-11-16 2026-11-17 2026-11-18')
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--capacity-blocks', type=int, default=1_000_000)
     parser.add_argument('--replicas', type=int, default=2)
@@ -128,5 +165,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if min(args.capacity_blocks, args.replicas, args.probe_blocks) < 1:
         parser.error('capacity-blocks, replicas and probe-blocks must be positive')
-    run_day(args.day_dir, args.output_dir, capacity_blocks=args.capacity_blocks,
-            replicas=args.replicas, probe_blocks=args.probe_blocks)
+    if args.day_dir and args.days:
+        parser.error('--day-dir cannot be combined with --days')
+    options = dict(capacity_blocks=args.capacity_blocks, replicas=args.replicas,
+                   probe_blocks=args.probe_blocks)
+    if args.day_dir:
+        run_day(args.day_dir, args.output_dir, **options)
+    else:
+        run_days(args.data_root, args.days or ['2026-11-16', '2026-11-17', '2026-11-18'],
+                 args.output_dir, **options)
