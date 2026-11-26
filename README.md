@@ -2,9 +2,9 @@
 
 用 Python 标准库计算 InferenceX `Cached input`，比较 Sage 的规则 session、用户缓存域和直接 cache-aware 重放。需要 **Python 3.10+**，无需安装第三方依赖。
 
-## 四个可运行的 example
+## 四个真实数据集复现 example
 
-在仓库根目录运行：
+先按下文准备 `data/` 中的真实数据，再在仓库根目录运行。默认入口不使用合成数据：
 
 ```bash
 python3 examples/agentx.py
@@ -13,14 +13,24 @@ python3 examples/sage_user_id.py
 python3 examples/sage_cache_aware.py
 ```
 
-默认使用仓库内手工合成的小数据，每次在 `results/examples/` 新建输出目录。完整解释、逐步计算与全量命令见 [examples/README.md](examples/README.md)。
+也可以一次运行四项，并将实际计算出的请求数、分子、分母与参考结果逐整数核对：
 
-| Example | 历史范围 | 合成样例预期 |
+```bash
+python3 examples/run_all.py
+```
+
+| Example | 默认真实数据范围 | 预期理论命中率 |
 |---|---|---:|
-| `examples/agentx.py` | AgentX 会话隔离、子 agent 继承主线快照 | 384 / 960 = **40.0000%** |
-| `examples/sage_session_id.py` | Sage 每个规则 session-id 独立历史 | 256 / 896 = **28.5714%** |
-| `examples/sage_user_id.py` | trace/schedule 可靠公共请求，按 `(uid,model)` 累计 | 448 / 896 = **50.0000%** |
-| `examples/sage_cache_aware.py` | 直接 schedule，共享缓存、LRU、多副本路由 | 共享 **64.2857%**；轮询 **42.8571%**；前缀路由 **64.2857%** |
+| `examples/agentx.py` | AgentX 全量，393 会话、98,827 次调用 | **98.015600%** |
+| `examples/sage_session_id.py` | Sage 11-16～18 三天全量 trace，按规则 session-id 隔离 | **61.091304%** |
+| `examples/sage_user_id.py` | Sage 11-16～18 可靠公共请求，按 `(uid,model)` 跨天保留历史 | **74.123859%** |
+| `examples/sage_cache_aware.py` | Sage 11-16～18 三天全量 schedule，4 副本各 50 万块，跨天保留历史 | **74.077481%** |
+
+三个 Sage example 默认都使用 **2026-11-16～18 三天全量**；用户及 cache-aware 主结果均跨天保留历史。若每天清空缓存，三天按输入 token 加权结果分别为 **74.029399%**、**74.010221%**，输出中会并列保存。
+
+cache-aware 同时输出共享无限、共享 LRU、轮询和随机对照，并明确主结果为 `replicas-cache-aware`。规则 session 使用 211,603 条 trace 请求；用户实验使用可可靠关联 uid 的 211,538 条公共请求；直接 cache-aware 使用 211,596 条 schedule 请求。这些是各数据表示的完整可用范围，分母明确记录。
+
+默认每次在 `results/examples/` 新建输出目录。真实数据缺失时会直接提示准备数据，不会回退到演示输入。实际执行、分子分母和日期范围见 [examples/README.md](examples/README.md)。
 
 ## 计分口径
 
@@ -56,11 +66,11 @@ AgentX 全量 SHA-256：`29b6a19e751ff5230771519aab755f80a0f43a4ba9cf96b72d3a6a4
 ```bash
 python3 examples/agentx.py --input data/traces.jsonl --limit 393 --output-dir results/agentx-full
 
-python3 examples/sage_session_id.py --trace-dir data/sage/2026-11-18/Sage-S2.1-flash/trace --output-dir results/sage-session-18
+python3 examples/sage_session_id.py --data-root data/sage --days 2026-11-16 2026-11-17 2026-11-18 --output-dir results/sage-session-full
 
 python3 examples/sage_user_id.py --data-root data/sage --days 2026-11-16 2026-11-17 2026-11-18 --output-dir results/common
 
-python3 examples/sage_cache_aware.py --day-dir data/sage/2026-11-18/Sage-S2.1-flash --capacity-blocks 500000 --replicas 4 --output-dir results/cache-aware-18
+python3 examples/sage_cache_aware.py --data-root data/sage --days 2026-11-16 2026-11-17 2026-11-18 --capacity-blocks 500000 --replicas 4 --output-dir results/cache-aware-full
 ```
 
 指定的输出目录必须不存在。
@@ -87,11 +97,18 @@ python3 -m experiments.request_chains --common-dir results/common --output-dir r
 
 ## 测试
 
+仅想快速检查代码而没有真实数据时，必须显式选择演示模式；这些数值不是正式数据集结果：
+
+```bash
+python3 examples/run_all.py --demo
+# 或逐项：python3 examples/agentx.py --demo 等
+```
+
 ```bash
 python3 -B -m unittest discover -s tests -v
 ```
 
-覆盖四个 example、公共请求到关联分析的 CLI 流程、分支快照、用户/模型隔离、重复消歧、LRU 首个未见块、冷缓存路由平局以及关联的时间和完整块约束。
+覆盖真实数据默认配置、缺数据时不回退 demo、显式演示模式、四个 example、公共请求到关联分析的 CLI 流程，以及分支快照、用户/模型隔离、重复消歧、LRU 和路由约束。
 
 ## 原始参考
 

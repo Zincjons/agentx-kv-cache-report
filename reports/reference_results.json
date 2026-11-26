@@ -264,5 +264,343 @@
       0.9085838005464739
     ],
     "not_ground_truth_tasks": true
+  },
+  "example_real_defaults": {
+    "agentx": {
+      "dataset_scope": "AgentX full, 393 conversations",
+      "requests": 98827,
+      "input_tokens": 21635381376,
+      "cached_input_tokens": 21206048768,
+      "cached_input_rate": 0.9801559953791128
+    },
+    "sage_session_id": {
+      "dataset_scope": "Sage full trace, 2026-11-16..18, isolated rule sessions",
+      "requests": 211603,
+      "input_tokens": 1808432345,
+      "cached_input_tokens": 1104794899,
+      "cached_input_rate": 0.6109130386074797
+    },
+    "sage_user_id": {
+      "dataset_scope": "Sage reliable common, 2026-11-16..18, continuous uid/model history",
+      "requests": 211538,
+      "input_tokens": 1808432150,
+      "cached_input_tokens": 1340479688,
+      "cached_input_rate": 0.741238585036215,
+      "daily_cold_start_cached_input_tokens": 1338771443,
+      "daily_cold_start_cached_input_rate": 0.7402939850411308
+    },
+    "sage_cache_aware": {
+      "dataset_scope": "Sage full schedule, 2026-11-16..18, continuous prefix routing",
+      "requests": 211596,
+      "input_tokens": 1808432324,
+      "cached_input_tokens": 1339641115,
+      "cached_input_rate": 0.7407748120963138,
+      "replicas": 4,
+      "capacity_blocks_per_replica": 500000,
+      "routing_probe_blocks": 256,
+      "daily_cold_start_cached_input_tokens": 1338424760,
+      "daily_cold_start_cached_input_rate": 0.7401022102057937
+    }
+  },
+  "cache_aware_schedule_all_3days": {
+    "dates": [
+      "2026-11-16",
+      "2026-11-17",
+      "2026-11-18"
+    ],
+    "capacity_blocks_per_replica": 500000,
+    "replicas": 4,
+    "probe_blocks": 256,
+    "continuous_results": [
+      {
+        "label": "shared-unlimited",
+        "requests": 211596,
+        "input_tokens": 1808432324,
+        "cached_input_tokens": 1340479865,
+        "uncached_input_tokens": 467952459,
+        "cached_input_rate": 0.7412386115920808,
+        "capacity_blocks_per_replica": null,
+        "replicas": 1,
+        "routing": "rr",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          211596
+        ],
+        "replica_input_tokens": [
+          1808432324
+        ],
+        "resident_blocks_per_replica": [
+          7419101
+        ]
+      },
+      {
+        "label": "shared-lru",
+        "requests": 211596,
+        "input_tokens": 1808432324,
+        "cached_input_tokens": 1336647246,
+        "uncached_input_tokens": 471785078,
+        "cached_input_rate": 0.7391193069605849,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 1,
+        "routing": "rr",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          211596
+        ],
+        "replica_input_tokens": [
+          1808432324
+        ],
+        "resident_blocks_per_replica": [
+          500000
+        ]
+      },
+      {
+        "label": "replicas-round-robin",
+        "requests": 211596,
+        "input_tokens": 1808432324,
+        "cached_input_tokens": 1199804815,
+        "uncached_input_tokens": 608627509,
+        "cached_input_rate": 0.6634502154585465,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "rr",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          52899,
+          52899,
+          52899,
+          52899
+        ],
+        "replica_input_tokens": [
+          458553253,
+          450856830,
+          453923807,
+          445098434
+        ],
+        "resident_blocks_per_replica": [
+          500000,
+          500000,
+          500000,
+          500000
+        ]
+      },
+      {
+        "label": "replicas-random",
+        "requests": 211596,
+        "input_tokens": 1808432324,
+        "cached_input_tokens": 1200486334,
+        "uncached_input_tokens": 607945990,
+        "cached_input_rate": 0.6638270716952746,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "random",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          53093,
+          52874,
+          52830,
+          52799
+        ],
+        "replica_input_tokens": [
+          452852636,
+          450377029,
+          453376912,
+          451825747
+        ],
+        "resident_blocks_per_replica": [
+          500000,
+          500000,
+          500000,
+          500000
+        ]
+      },
+      {
+        "label": "replicas-cache-aware",
+        "requests": 211596,
+        "input_tokens": 1808432324,
+        "cached_input_tokens": 1339641115,
+        "uncached_input_tokens": 468791209,
+        "cached_input_rate": 0.7407748120963138,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "prefix",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          47253,
+          42753,
+          81536,
+          40054
+        ],
+        "replica_input_tokens": [
+          369927650,
+          790444395,
+          167771366,
+          480288913
+        ],
+        "resident_blocks_per_replica": [
+          500000,
+          500000,
+          500000,
+          500000
+        ]
+      }
+    ],
+    "daily_cold_starts_weighted_results": [
+      {
+        "label": "shared-unlimited",
+        "requests": 211596,
+        "input_tokens": 1808432324,
+        "cached_input_tokens": 1338771626,
+        "uncached_input_tokens": 469660698,
+        "cached_input_rate": 0.7402940150056729,
+        "capacity_blocks_per_replica": null,
+        "replicas": 1,
+        "routing": "rr",
+        "routing_probe_blocks": 256
+      },
+      {
+        "label": "shared-lru",
+        "requests": 211596,
+        "input_tokens": 1808432324,
+        "cached_input_tokens": 1336101669,
+        "uncached_input_tokens": 472330655,
+        "cached_input_rate": 0.7388176219084215,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 1,
+        "routing": "rr",
+        "routing_probe_blocks": 256
+      },
+      {
+        "label": "replicas-round-robin",
+        "requests": 211596,
+        "input_tokens": 1808432324,
+        "cached_input_tokens": 1197710542,
+        "uncached_input_tokens": 610721782,
+        "cached_input_rate": 0.6622921555343754,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "rr",
+        "routing_probe_blocks": 256
+      },
+      {
+        "label": "replicas-random",
+        "requests": 211596,
+        "input_tokens": 1808432324,
+        "cached_input_tokens": 1199669648,
+        "uncached_input_tokens": 608762676,
+        "cached_input_rate": 0.6633754728219512,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "random",
+        "routing_probe_blocks": 256
+      },
+      {
+        "label": "replicas-cache-aware",
+        "requests": 211596,
+        "input_tokens": 1808432324,
+        "cached_input_tokens": 1338424760,
+        "uncached_input_tokens": 470007564,
+        "cached_input_rate": 0.7401022102057937,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "prefix",
+        "routing_probe_blocks": 256
+      }
+    ],
+    "daily_cache_aware": [
+      {
+        "day": "2026-11-16",
+        "label": "replicas-cache-aware",
+        "requests": 3866,
+        "input_tokens": 15385453,
+        "cached_input_tokens": 7674965,
+        "uncached_input_tokens": 7710488,
+        "cached_input_rate": 0.49884556535319435,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "prefix",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          938,
+          961,
+          1004,
+          963
+        ],
+        "replica_input_tokens": [
+          2379742,
+          7779450,
+          4207681,
+          1018580
+        ],
+        "resident_blocks_per_replica": [
+          27980,
+          48746,
+          32461,
+          12648
+        ]
+      },
+      {
+        "day": "2026-11-17",
+        "label": "replicas-cache-aware",
+        "requests": 36991,
+        "input_tokens": 330197797,
+        "cached_input_tokens": 235772223,
+        "uncached_input_tokens": 94425574,
+        "cached_input_rate": 0.7140333010762031,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "prefix",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          6728,
+          6811,
+          7629,
+          15823
+        ],
+        "replica_input_tokens": [
+          46328636,
+          169184964,
+          68091621,
+          46592576
+        ],
+        "resident_blocks_per_replica": [
+          460226,
+          409285,
+          474399,
+          147748
+        ]
+      },
+      {
+        "day": "2026-11-18",
+        "label": "replicas-cache-aware",
+        "requests": 170739,
+        "input_tokens": 1462849074,
+        "cached_input_tokens": 1094977572,
+        "uncached_input_tokens": 367871502,
+        "cached_input_rate": 0.7485239533330011,
+        "capacity_blocks_per_replica": 500000,
+        "replicas": 4,
+        "routing": "prefix",
+        "routing_probe_blocks": 256,
+        "replica_requests": [
+          33044,
+          72346,
+          30222,
+          35127
+        ],
+        "replica_input_tokens": [
+          229343259,
+          118079543,
+          379369232,
+          736057040
+        ],
+        "resident_blocks_per_replica": [
+          500000,
+          500000,
+          500000,
+          500000
+        ]
+      }
+    ]
   }
 }
